@@ -69,16 +69,19 @@ export default function App() {
       />
 
       <select
-        className="mb-4 p-3 rounded-lg text-black"
-        value={voice}
-        onChange={(e) => setVoice(e.target.value)}
-      >
-        {voices.map((v) => (
-          <option key={v.id} value={v.id}>
-            {v.label}
-          </option>
-        ))}
-      </select>
+  className="mb-4 p-3 rounded-lg text-black"
+  value={voice}
+  onChange={(e) => setVoice(e.target.value)}
+>
+  <option value="" disabled>
+    -- Select a voice --
+  </option>
+  {voices.map((v) => (
+    <option key={v.id} value={v.id}>
+      {v.label}
+    </option>
+  ))}
+</select>
 
       <button
         onClick={speak}
