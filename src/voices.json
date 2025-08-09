@@ -1,0 +1,6 @@
+[
+  { "id": "alloy", "label": "Alloy (US)" },
+  { "id": "verse", "label": "Verse (UK)" },
+  { "id": "aria", "label": "Aria (AU)" },
+  { "id": "sage", "label": "Sage (Neutral)" }
+]
