@@ -1,9 +1,0 @@
-[
-  { "id": "alloy", "label": "Alloy (US)" },
-  { "id": "verse", "label": "Verse (UK)" },
-  { "id": "aria", "label": "Aria (AU)" },
-  { "id": "sage", "label": "Sage (Neutral)" },
-  { "id": "nova", "label": "Nova (US, female)" },
-  { "id": "luna", "label": "Luna (UK, female)" },
-  { "id": "amber", "label": "Amber (US, warm tone)" }
-]
