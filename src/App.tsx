@@ -12,8 +12,9 @@ export default function App() {
       try {
         const res = await fetch("/api/voices");
         const data = await res.json();
+        console.log("Voices fetched:", data);
         setVoices(data);
-        if (data.length > 0) setVoice(data[0].id);
+        if (Array.isArray(data) && data.length > 0) setVoice(data[0].id);
       } catch (err) {
         console.error("Failed to load voices", err);
       }
@@ -69,19 +70,25 @@ export default function App() {
       />
 
       <select
-  className="mb-4 p-3 rounded-lg text-black"
-  value={voice}
-  onChange={(e) => setVoice(e.target.value)}
->
-  <option value="" disabled>
-    -- Select a voice --
-  </option>
-  {voices.map((v) => (
-    <option key={v.id} value={v.id}>
-      {v.label}
-    </option>
-  ))}
-</select>
+        className="mb-4 p-3 rounded-lg text-black"
+        value={voice}
+        onChange={(e) => setVoice(e.target.value)}
+      >
+        {!Array.isArray(voices) || voices.length === 0 ? (
+          <option disabled>Loading voices...</option>
+        ) : (
+          <>
+            <option value="" disabled>
+              -- Select a voice --
+            </option>
+            {voices.map((v) => (
+              <option key={v.id} value={v.id}>
+                {v.label}
+              </option>
+            ))}
+          </>
+        )}
+      </select>
 
       <button
         onClick={speak}
@@ -117,4 +124,4 @@ export default function App() {
       </footer>
     </div>
   );
-}
+        }
