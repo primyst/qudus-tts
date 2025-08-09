@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import voices from "./voices.json";
 
 export default function App() {
@@ -17,17 +17,12 @@ export default function App() {
     setAudioUrl(null);
 
     try {
-      const response = await fetch("https://api.openai.com/v1/audio/speech", {
+      const response = await fetch("/api/tts", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
         },
-        body: JSON.stringify({
-          model: "gpt-4o-mini-tts",
-          voice: voice,
-          input: text,
-        }),
+        body: JSON.stringify({ text, voice }),
       });
 
       if (!response.ok) throw new Error("Failed to generate speech");
@@ -37,7 +32,6 @@ export default function App() {
       const url = URL.createObjectURL(blob);
       setAudioUrl(url);
 
-      // Auto play
       const audio = new Audio(url);
       audio.play();
     } catch (err) {
@@ -50,7 +44,7 @@ export default function App() {
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-gradient-to-br from-purple-700 to-indigo-900 p-6">
-      <h1 className="text-3xl font-bold mb-6">🎙️ Text to Voice AI</h1>
+      <h1 className="text-3xl font-bold mb-6">Text to Voice AI</h1>
 
       <textarea
         className="w-full max-w-lg p-4 rounded-lg text-black mb-4"
