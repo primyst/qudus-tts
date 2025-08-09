@@ -7,7 +7,6 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
 
-  // Fetch voices dynamically from API
   useEffect(() => {
     const fetchVoices = async () => {
       try {
