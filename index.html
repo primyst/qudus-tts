@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Text to Voice AI</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: linear-gradient(135deg, #4e54c8, #8f94fb);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 30px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 20px;
+      font-size: 1.8rem;
+    }
+    textarea {
+      width: 100%;
+      height: 120px;
+      padding: 15px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      resize: none;
+      margin-bottom: 15px;
+      outline: none;
+    }
+    select, button {
+      width: 100%;
+      padding: 12px;
+      font-size: 1rem;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      margin-bottom: 10px;
+    }
+    select {
+      background: rgba(255, 255, 255, 0.8);
+      color: #333;
+    }
+    button {
+      background: #ff6b6b;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #ff4757;
+    }
+    footer {
+      margin-top: 15px;
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Text to Voice AI by Abdulqudus</h1>
+    <textarea id="textInput" placeholder="Type something and hear it..."></textarea>
+    <select id="voiceSelect"></select>
+    <button onclick="speakText()">🔊 Convert to Speech</button>
+    <footer style="margin-top: 20px; font-size: 0.9rem; opacity: 0.8;">
+  Design and Developed by <a href=https://aq-portfolio-rose.vercel.app/" style="font-weight: bold;">&gt;primyst&lt;</a>
+    </footer>
+  </div>
+
+  <script>
+    let voices = [];
+
+    function loadVoices() {
+      voices = speechSynthesis.getVoices();
+      const voiceSelect = document.getElementById("voiceSelect");
+      voiceSelect.innerHTML = '';
+      voices.forEach((voice, index) => {
+        const option = document.createElement("option");
+        option.value = index;
+        option.textContent = `${voice.name} (${voice.lang})`;
+        voiceSelect.appendChild(option);
+      });
+    }
+
+    function speakText() {
+      const text = document.getElementById("textInput").value;
+      const voiceIndex = document.getElementById("voiceSelect").value;
+      if (!text) return alert("Please enter some text.");
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.voice = voices[voiceIndex];
+      speechSynthesis.speak(utterance);
+    }
+
+    speechSynthesis.onvoiceschanged = loadVoices;
+  </script>
+</body>
+</html>
