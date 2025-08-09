@@ -14,7 +14,7 @@ export default function App() {
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-gradient-to-br from-purple-700 to-indigo-900 p-6">
-      <h1 className="text-3xl font-bold mb-6">🎙️ Text to Voice AI</h1>
+      <h1 className="text-3xl font-bold mb-6">Text to Voice AI</h1>
       <textarea
         className="w-full max-w-lg p-4 rounded-lg text-black mb-4"
         rows={5}
