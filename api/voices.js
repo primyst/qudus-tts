@@ -17,15 +17,15 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
-    // Format the voices for voices.json
-    const voicesList = data.voices.map((v) => ({
+    // Map to match { id, label } format
+    const voices = data.voices.map((v) => ({
       id: v.voice_id,
-      label: `${v.name} (${v.labels.accent || v.labels.gender || "Voice"})`,
+      label: `${v.name} (${v.labels?.accent || "Unknown Accent"})`
     }));
 
-    res.status(200).json(voicesList);
+    res.status(200).json(voices);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to fetch voices" });
   }
-  }
+}
