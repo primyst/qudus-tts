@@ -21,40 +21,40 @@ export default function App() {
     fetchVoices();
   }, []);
 
-  const speak = async () => {
-    if (!text.trim()) {
-      alert("Please enter some text");
-      return;
-    }
+ const speak = async () => {
+  if (!text.trim()) {
+    alert("Please enter some text");
+    return;
+  }
 
-    setLoading(true);
-    setAudioUrl(null);
+  setLoading(true);
+  setAudioUrl(null);
 
-    try {
-      const response = await fetch("/api/tts", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ text, voice }),
-      });
+  try {
+    const response = await fetch("/api/tts", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text, voice }),
+    });
 
-      if (!response.ok) throw new Error("Failed to generate speech");
+    if (!response.ok) throw new Error("Failed to generate speech");
 
-      const arrayBuffer = await response.arrayBuffer();
-      const blob = new Blob([arrayBuffer], { type: "audio/mpeg" });
-      const url = URL.createObjectURL(blob);
-      setAudioUrl(url);
+    const arrayBuffer = await response.arrayBuffer();
+    const blob = new Blob([arrayBuffer], { type: "audio/mpeg" });
+    const url = URL.createObjectURL(blob);
+    setAudioUrl(url);
 
-      const audio = new Audio(url);
-      audio.play();
-    } catch (err) {
-      console.error(err);
-      alert("Error generating speech");
-    } finally {
-      setLoading(false);
-    }
-  };
+    const audio = new Audio(url);
+    audio.play();
+  } catch (err) {
+    console.error(err);
+    alert("Error generating speech");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-gradient-to-br from-purple-700 to-indigo-900 p-6">
