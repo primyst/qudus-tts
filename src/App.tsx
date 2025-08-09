@@ -10,7 +10,7 @@ export default function App() {
   useEffect(() => {
     const fetchVoices = async () => {
       try {
-        const res = await fetch("/api/voices");
+        const res = await fetch("/voices.json");
         const data = await res.json();
         console.log("Voices fetched:", data);
         setVoices(data);
@@ -124,4 +124,4 @@ export default function App() {
       </footer>
     </div>
   );
-        }
+  }
