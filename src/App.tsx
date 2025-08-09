@@ -1,20 +1,57 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import voices from "./voices.json";
 
 export default function App() {
   const [text, setText] = useState("");
+  const [voice, setVoice] = useState(voices[0].id);
+  const [loading, setLoading] = useState(false);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
 
-  const speak = () => {
+  const speak = async () => {
     if (!text.trim()) {
       alert("Please enter some text");
       return;
     }
-    const utterance = new SpeechSynthesisUtterance(text);
-    speechSynthesis.speak(utterance);
+
+    setLoading(true);
+    setAudioUrl(null);
+
+    try {
+      const response = await fetch("https://api.openai.com/v1/audio/speech", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: "gpt-4o-mini-tts",
+          voice: voice,
+          input: text,
+        }),
+      });
+
+      if (!response.ok) throw new Error("Failed to generate speech");
+
+      const arrayBuffer = await response.arrayBuffer();
+      const blob = new Blob([arrayBuffer], { type: "audio/mpeg" });
+      const url = URL.createObjectURL(blob);
+      setAudioUrl(url);
+
+      // Auto play
+      const audio = new Audio(url);
+      audio.play();
+    } catch (err) {
+      console.error(err);
+      alert("Error generating speech");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-gradient-to-br from-purple-700 to-indigo-900 p-6">
-      <h1 className="text-3xl font-bold mb-6">Text to Voice AI</h1>
+      <h1 className="text-3xl font-bold mb-6">🎙️ Text to Voice AI</h1>
+
       <textarea
         className="w-full max-w-lg p-4 rounded-lg text-black mb-4"
         rows={5}
@@ -22,14 +59,50 @@ export default function App() {
         value={text}
         onChange={(e) => setText(e.target.value)}
       />
+
+      <select
+        className="mb-4 p-3 rounded-lg text-black"
+        value={voice}
+        onChange={(e) => setVoice(e.target.value)}
+      >
+        {voices.map((v) => (
+          <option key={v.id} value={v.id}>
+            {v.label}
+          </option>
+        ))}
+      </select>
+
       <button
         onClick={speak}
-        className="bg-pink-500 hover:bg-pink-600 px-6 py-3 rounded-lg font-semibold"
+        disabled={loading}
+        className="bg-pink-500 hover:bg-pink-600 px-6 py-3 rounded-lg font-semibold disabled:opacity-50"
       >
-        🔊 Convert to Speech
+        {loading ? "Generating..." : "🔊 Convert to Speech"}
       </button>
+
+      {audioUrl && (
+        <div className="mt-4 flex flex-col items-center gap-2">
+          <audio controls src={audioUrl}></audio>
+          <a
+            href={audioUrl}
+            download="speech.mp3"
+            className="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-lg"
+          >
+            ⬇️ Download MP3
+          </a>
+        </div>
+      )}
+
       <footer className="mt-8 text-sm opacity-75">
-        Design & Developed by <a href="https://aq-portfolio-rose.vercel.app/"><strong>&gt;primyst&lt;</strong></a>
+        Design & Developed by{" "}
+        <a
+          href="https://aq-portfolio-rose.vercel.app/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline hover:text-pink-300"
+        >
+          &gt;primyst&lt;
+        </a>
       </footer>
     </div>
   );
